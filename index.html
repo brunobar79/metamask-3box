@@ -103,15 +103,20 @@
                 },
                 type: 'STATE_UPDATE'
             });
+            
             setStatus(`Public space writing ${key} => ${value}`);
+            
             await window.space.public.set(key, value);
+            
             window.toNative({
                 payload: {
                     status: 'public_write_end'
                 },
                 type: 'STATE_UPDATE'
             });
+            
             setStatus(`Public space wrote ${key} => ${value}`);
+            
         } catch(e){
             console.log('something broke', e);
             alert(e.toString());
@@ -127,15 +132,21 @@
                 },
                 type: 'STATE_UPDATE'
             });
+            
             setStatus(`Public space getting ${key}`);
+            
             const value = await window.space.public.get(key);
+            
             window.toNative({
                 payload: {
-                    status: 'public_get_end'
+                    status: 'public_get_end',
+                    result: value
                 },
                 type: 'STATE_UPDATE'
             });
+            
             setStatus(`Public space got ${key} => ${value}`);
+            
         } catch(e){
             console.log('something broke', e);
             alert(e.toString());
