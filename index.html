@@ -1,0 +1,104 @@
+<html>
+<head>
+<title>3box</title>
+<script src="https://unpkg.com/3box/dist/3box.js"></script>
+</head>
+<body>
+<script>
+    
+    function setStatus(status){
+        document.getElementById('status').innerText = status;
+    }
+
+
+    window.toNative = function(msg){
+        window.ReactNativeWebView.postMessage(
+                JSON.stringify(msg)
+        );
+    };
+
+    window.ethereumPendingCallbacks = {};
+    window.ethereum = {
+        sendAsync: (payload, callback) => {
+            if (!window.ReactNativeWebView.postMessage) {
+                alert('Bridge not ready');
+            }   
+
+            const random = Math.floor(Math.random() * 100 + 1);
+
+            const fullPayload = {
+                ...payload,
+                __mmID: Date.now() * random,
+                hostname: window.location.hostname
+            };
+
+            window.ethereumPendingCallbacks[`${fullPayload.__mmID}`] = callback;
+            window.toNative({
+                payload: fullPayload,
+                type: 'PROVIDER'
+            });
+        },
+        _onMessage: (data) =>{
+            try {
+                const payload = typeof data === 'string' ? JSON.parse(data) : data;
+                const { __mmID, error, response } = payload;
+                const callback = window.ethereumPendingCallbacks[`${__mmID}`];
+                callback && callback(error, response);
+                delete window.ethereumPendingCallbacks[`${__mmID}`];
+            } catch (error) {
+                alert(error.toString()); // eslint-disable-line no-console
+            }
+        }
+    }
+    window.openBox = async (address) => {
+        try{
+            setStatus('Opening box...');
+            window.box = await Box.openBox(address, window.ethereum);
+            window.box.onSyncDone(() => {
+                window.toNative({
+                    payload: {
+                        status: 'box_open'
+                    },
+                    type: 'STATE_UPDATE'
+                });
+                setStatus('Box open');
+            
+            });
+            return true;
+            
+        } catch(e){
+            console.log('something broke', e);
+            alert(e.toString());
+            return false;
+        }
+    }
+
+    window.openSpace = async (spaceName) => {
+        try{
+            setStatus('opening space');
+            window.space = await window.box.openSpace(spaceName, {
+                onSyncDone: async () => {
+                    window.toNative({
+                        payload: {
+                            status: 'space_open'
+                        },
+                        type: 'STATE_UPDATE'
+                    });
+                    setStatus('space open');
+                }
+            });
+            return true;
+        } catch(e){
+            console.log('something broke', e);
+            alert(e.toString());
+            return false;
+        }
+    }
+
+    
+
+</script>
+<a href="javascript:document.location.reload()" style="font-size: 50px;">RELOAD</a>
+<div id="status" style="font-size: 50px;"></div>
+</body>
+</html>
