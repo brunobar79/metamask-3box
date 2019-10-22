@@ -54,16 +54,14 @@
         try{
             setStatus('Opening box...');
             window.box = await Box.openBox(address, window.ethereum);
-            window.box.onSyncDone(() => {
-                window.toNative({
-                    payload: {
-                        status: 'box_open'
-                    },
-                    type: 'STATE_UPDATE'
-                });
-                setStatus('Box open');
-            
+            await window.box.syncDone;
+            window.toNative({
+                payload: {
+                    status: 'box_open'
+                },
+                type: 'STATE_UPDATE'
             });
+            setStatus('Box open');
             return true;
             
         } catch(e){
@@ -76,17 +74,15 @@
     window.openSpace = async (spaceName) => {
         try{
             setStatus('opening space');
-            window.space = await window.box.openSpace(spaceName, {
-                onSyncDone: async () => {
-                    window.toNative({
-                        payload: {
-                            status: 'space_open'
-                        },
-                        type: 'STATE_UPDATE'
-                    });
-                    setStatus('space open');
-                }
+            window.space = await window.box.openSpace(spaceName);
+            await window.space.syncDone
+            window.toNative({
+                payload: {
+                    status: 'space_open'
+                },
+                type: 'STATE_UPDATE'
             });
+            setStatus('space open');
             return true;
         } catch(e){
             console.log('something broke', e);
