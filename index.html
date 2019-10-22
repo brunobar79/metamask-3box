@@ -52,7 +52,7 @@
     }
     window.openBox = async (address) => {
         try{
-            setStatus('Opening box...');
+            setStatus('Opening box ', address);
             window.box = await Box.openBox(address, window.ethereum);
             setStatus('Syncing box...');
             await window.box.syncDone;
@@ -75,9 +75,11 @@
     window.openSpace = async (spaceName) => {
         try{
             setStatus(`Opening space ${spaceName}`);
-            window.space = await window.box.openSpace(spaceName);
-            setStatus('Syncing space...');
-            await window.space.syncDone
+            window.space = await window.box.openSpace(spaceName, {
+                onSyncDone: () => {
+                    setStatus('Space synced');
+                }
+            });
             window.toNative({
                 payload: {
                     status: 'space_open'
