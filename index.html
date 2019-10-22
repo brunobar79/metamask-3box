@@ -153,6 +153,123 @@
             return false;
         }        
     }
+    
+    window.spacePrivateSet = async (key, value) => {
+        try{
+            window.toNative({
+                payload: {
+                    status: 'idle'
+                },
+                type: 'STATE_UPDATE'
+            });
+            
+            setStatus(`Private space writing ${key} => ${value}`);
+            
+            await window.space.private.set(key, value);
+            
+            window.toNative({
+                payload: {
+                    status: 'private_write_end'
+                },
+                type: 'STATE_UPDATE'
+            });
+            
+            setStatus(`Private space wrote ${key} => ${value}`);
+            
+        } catch(e){
+            console.log('something broke', e);
+            alert(e.toString());
+            return false;
+        }        
+    }
+    
+    window.spacePrivateGet = async (key) => {
+        try{
+            window.toNative({
+                payload: {
+                    status: 'idle'
+                },
+                type: 'STATE_UPDATE'
+            });
+            
+            setStatus(`Private space getting ${key}`);
+            
+            const value = await window.space.private.get(key);
+            
+            window.toNative({
+                payload: {
+                    status: 'private_get_end',
+                    result: value
+                },
+                type: 'STATE_UPDATE'
+            });
+            
+            setStatus(`Private space got ${key} => ${value}`);
+            
+        } catch(e){
+            console.log('something broke', e);
+            alert(e.toString());
+            return false;
+        }        
+    }
+    
+    window.spacePrivateRemove = async (key) => {
+        try{
+            window.toNative({
+                payload: {
+                    status: 'idle'
+                },
+                type: 'STATE_UPDATE'
+            });
+            
+            setStatus(`Private space removing ${key}`);
+            
+            const value = await window.space.private.remove(key);
+            
+            window.toNative({
+                payload: {
+                    status: 'private_remove_end'
+                },
+                type: 'STATE_UPDATE'
+            });
+            
+            setStatus(`Private space removed ${key}`);
+            
+        } catch(e){
+            console.log('something broke', e);
+            alert(e.toString());
+            return false;
+        }        
+    }
+    
+    window.spacePublicRemove = async (key) => {
+        try{
+            window.toNative({
+                payload: {
+                    status: 'idle'
+                },
+                type: 'STATE_UPDATE'
+            });
+            
+            setStatus(`Public space removing ${key}`);
+            
+            const value = await window.space.publuc.remove(key);
+            
+            window.toNative({
+                payload: {
+                    status: 'public_remove_end'
+                },
+                type: 'STATE_UPDATE'
+            });
+            
+            setStatus(`Public space removed ${key}`);
+            
+        } catch(e){
+            console.log('something broke', e);
+            alert(e.toString());
+            return false;
+        }        
+    }
 
     
 
