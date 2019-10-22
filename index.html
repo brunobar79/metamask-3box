@@ -224,7 +224,7 @@
             
             setStatus(`Public space removing ${key}`);
             
-            const value = await window.space.public.remove(key);
+            await window.space.public.remove(key);
             
             window.toNative({
                 payload: {
