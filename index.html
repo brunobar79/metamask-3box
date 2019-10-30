@@ -68,6 +68,13 @@
         } catch(e){
             console.log('something broke', e);
             alert(e.toString());
+            window.toNative({
+                payload: {
+                    status: 'box_open',
+                    error: true
+                },
+                type: 'STATE_UPDATE'
+            });
             return false;
         }
     }
@@ -91,6 +98,13 @@
         } catch(e){
             console.log('something broke', e);
             alert(e.toString());
+            window.toNative({
+                payload: {
+                    status: 'space_open',
+                    error: true
+                },
+                type: 'STATE_UPDATE'
+            });
             return false;
         }
     }
@@ -120,6 +134,13 @@
         } catch(e){
             console.log('something broke', e);
             alert(e.toString());
+            window.toNative({
+                payload: {
+                    status: 'public_write_end',
+                    error: true
+                },
+                type: 'STATE_UPDATE'
+            });
             return false;
         }        
     }
@@ -150,6 +171,13 @@
         } catch(e){
             console.log('something broke', e);
             alert(e.toString());
+            window.toNative({
+                payload: {
+                    status: 'public_get_end',
+                    error: true
+                },
+                type: 'STATE_UPDATE'
+            });
             return false;
         }        
     }
@@ -179,6 +207,13 @@
         } catch(e){
             console.log('something broke', e);
             alert(e.toString());
+            window.toNative({
+                payload: {
+                    status: 'private_write_end',
+                    error: true
+                },
+                type: 'STATE_UPDATE'
+            });
             return false;
         }        
     }
@@ -209,6 +244,13 @@
         } catch(e){
             console.log('something broke', e);
             alert(e.toString());
+            window.toNative({
+                payload: {
+                    status: 'private_get_end',
+                    error: true
+                },
+                type: 'STATE_UPDATE'
+            });
             return false;
         }        
     }
@@ -238,6 +280,13 @@
         } catch(e){
             console.log('something broke', e);
             alert(e.toString());
+            window.toNative({
+                payload: {
+                    status: 'public_remove_end',
+                    error: true
+                },
+                type: 'STATE_UPDATE'
+            });
             return false;
         }        
     }
@@ -267,6 +316,13 @@
         } catch(e){
             console.log('something broke', e);
             alert(e.toString());
+            window.toNative({
+                payload: {
+                    status: 'private_remove_end',
+                    error: true
+                },
+                type: 'STATE_UPDATE'
+            });
             return false;
         }        
     }
