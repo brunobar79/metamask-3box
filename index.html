@@ -1,15 +1,14 @@
 <html>
 <head>
 <title>3box</title>
-<script src="https://5dbafe22865b8cfb65a0908e--3box-test.netlify.com/3box.js"></script>
+<script src="js/3box.js"></script>
 </head>
 <body>
 <script>
     
-    function setStatus(status){
-        document.getElementById('status').innerText = status;
+    const setStatus = (msg) => {
+        console.log(msg);
     }
-
 
     window.toNative = function(msg){
         window.ReactNativeWebView.postMessage(
@@ -19,9 +18,6 @@
 
     window.ethereumPendingCallbacks = {};
     window.ethereum = {
-        _network:  "1",
-        _selectedAddress: "0xe46abaf75cfbff815c0b7ffed6f02b0760ea27f1",
-        isMetaMask: true,
         sendAsync: (payload, callback) => {
             if (!window.ReactNativeWebView.postMessage) {
                 alert('Bridge not ready');
@@ -56,7 +52,7 @@
     window.openBox = async (address) => {
         try{
             setStatus('Opening box ', address);
-            Box.openBox(address.toLowerCase(), window.ethereum, {}).then(box => {
+            window.Box.openBox(address.toLowerCase(), window.ethereum, {}).then(box => {
                 window.box = box;
                 box.onSyncDone((res) => {
                     console.log('Sync Complete');
@@ -68,6 +64,17 @@
                     });
                     setStatus('Box open');
                 })
+            }).catch( e => {
+				  console.log('something broke', e);
+				  window.toNative({
+					  payload: {
+						  status: 'box_open',
+						  error: true,
+						  result: e.toString()
+					  },
+					  type: 'STATE_UPDATE'
+				  });
+				  return false;
             });
             setStatus('Syncing box...');
             return true;
@@ -333,13 +340,6 @@
             return false;
         }        
     }
-    
-    
-
-    
-
 </script>
-<a href="javascript:document.location.reload()" style="font-size: 50px;">RELOAD</a>
-<div id="status" style="font-size: 50px;"></div>
 </body>
 </html>
