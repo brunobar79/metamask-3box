@@ -53,16 +53,20 @@
     window.openBox = async (address) => {
         try{
             setStatus('Opening box ', address);
-            window.box = await Box.openBox(address.toLowerCase(), window.ethereum, {});
-            setStatus('Syncing box...');
-            await window.box.syncDone;
-            window.toNative({
-                payload: {
-                    status: 'box_open'
-                },
-                type: 'STATE_UPDATE'
+            Box.openBox(address.toLowerCase(), window.ethereum, {}).then(box => {
+                window.box = box;
+                box.onSyncDone((res) => {
+                    console.log('Sync Complete');
+                    window.toNative({
+                        payload: {
+                            status: 'box_open'
+                        },
+                        type: 'STATE_UPDATE'
+                    });
+                    setStatus('Box open');
+                })
             });
-            setStatus('Box open');
+            setStatus('Syncing box...');
             return true;
             
         } catch(e){
