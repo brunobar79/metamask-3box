@@ -19,6 +19,9 @@
 
     window.ethereumPendingCallbacks = {};
     window.ethereum = {
+        _network:  "1",
+        _selectedAddress: "0xe46abaf75cfbff815c0b7ffed6f02b0760ea27f1",
+        isMetaMask: true,
         sendAsync: (payload, callback) => {
             if (!window.ReactNativeWebView.postMessage) {
                 alert('Bridge not ready');
