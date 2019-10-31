@@ -53,7 +53,7 @@
     window.openBox = async (address) => {
         try{
             setStatus('Opening box ', address);
-            window.box = await Box.openBox(address, window.ethereum);
+            window.box = await Box.openBox(address.toLowerCase(), window.ethereum, {});
             setStatus('Syncing box...');
             await window.box.syncDone;
             window.toNative({
